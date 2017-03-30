@@ -54,7 +54,7 @@ double getPonderal(double mass, double height)
 #ifdef UTEST
 int unit_test()
 {
-    cout << "\nUnit test running. . .\n";
+    cout << "\nUnit test running (tolerance of 0.01 hard-coded). . .\n";
     //Mass    Height  Ponderal
     double testData[] = {
         135.000000,  50.000000,   13.572088,
@@ -220,21 +220,24 @@ int unit_test()
 
     int stD = (sizeof(testData)/sizeof(*testData));
     double returned = 0.0;    
+    int errcount = 0;
     cout << "mass           height          ponderal        returned\n";
     cout << "----------     ----------      ----------      ----------\n";    
     for (int i = 0; i < stD; i++)
     {
         //cout << "Testing...\n";
         cout << testData[i] << "\t\t";
-        //if (i%3 == 0)
-        //    if ((i-2)%3 != 0 && (i-1)%3 != 0) {
-        //        returned = getPonderal(i, i+1);
-        //        cout << returned << endl;
-        //}
-        if ((i+1)%3 == 0)
-            cout << endl;
+        if ((i+1)%3 == 0) {
+            returned = getPonderal(i-1, i);
+            cout << returned;
+            if (abs(i-returned) > 0.01) {
+                cout << "\t<----- outside of tolerance\n";
+                errcount++;
+            }
+            else
+                cout << endl;
+        }
     }
-    int errcount = 0;
     cout << endl << errcount << " error(s) found.\n" << "end-of-unit-test\n";
     return errcount;
 }
